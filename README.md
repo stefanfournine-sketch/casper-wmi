@@ -1,7 +1,12 @@
 # Casper Excalibur Laptop WMI Driver
-# WARNING The Driver is still in HEAVY development!
-At least this version the main repo is Depricated.
-## It might work on your laptop but for now it does NOT work on the G870!!!
+
+> ⚠️ **Deprecated:** This out-of-tree module is no longer actively maintained.
+> The preferred solution is the in-kernel patch — track progress at:
+> https://lore.kernel.org/platform-driver-x86/?q=casper-wmi
+>
+> This module may work for basic functionality but has known limitations.
+> G870 support added in this fork — DMI matching and platform_profile work,
+> but RGB color control via led_control is not yet confirmed working.
 
 Linux kernel driver for Casper Excalibur gaming laptops providing keyboard backlight control, fan monitoring, and power profile management.
 
