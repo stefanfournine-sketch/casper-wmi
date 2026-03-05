@@ -1,6 +1,6 @@
 # Casper Excalibur Laptop WMI Driver
 # WARNING The Driver is still in HEAVY development!
-At least this version the other is Depricated.
+At least this version the main repo is Depricated.
 ## It might work on your laptop but for now it does NOT work on the G870!!!
 
 Linux kernel driver for Casper Excalibur gaming laptops providing keyboard backlight control, fan monitoring, and power profile management.
