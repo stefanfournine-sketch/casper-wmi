@@ -1,16 +1,87 @@
-# ⚠️ I'm not updating this repo anymore
-This kernel module is deprecated. Because new driver registers a platform_profile device
-but it isn't possible to do that in a kernel module. If you want to get the latest
-driver, you will have to compile kernel with my patch.  
-You can track latest patches from https://lore.kernel.org/platform-driver-x86/?q=casper-wmi  
-Also, this current driver registers a pwm device, but this is inaccurate (it should've been a platform_profile device). Using this pwm
-device with userspace applications will cause problems.
+# Casper Excalibur Laptop WMI Driver
+# Warning The Driver is Not guaranteed to work!
+## It might work on your laptop but for now it does NOT work on the G870!!!
 
-# Linux keyboard backlight driver for Casper Excalibur laptops
-I'm working on sending a patch to lkml. Until then, this works for me.
+Linux kernel driver for Casper Excalibur gaming laptops providing keyboard backlight control, fan monitoring, and power profile management.
 
-# How to build and install
+## Features
+
+| Feature | Interface | Description |
+|---------|-----------|-------------|
+| Keyboard Backlight | LED subsystem | Brightness (0-2) and RGB color control |
+| Fan Monitoring | HWMON | CPU and GPU fan speed (RPM) |
+| Power Profiles | platform_profile | Performance profile switching |
+
+## Supported Hardware
+
+| Model | Vendor | Notes |
+|-------|--------|-------|
+| EXCALIBUR G650 | CASPER BILGISAYAR SISTEMLERI | |
+| EXCALIBUR G750 | CASPER BILGISAYAR SISTEMLERI | |
+| EXCALIBUR G670 | CASPER BILGISAYAR SISTEMLERI | |
+| EXCALIBUR G870 | CASPER BILGISAYAR SISTEMLERI | |
+| EXCALIBUR G900 | CASPER BILGISAYAR SISTEMLERI | BIOS CP131 |
+
+## Building
+
+```bash
+make
+sudo insmod casper-wmi.ko
 ```
-$ make
-$ sudo insmod casper-wmi.ko
+
+To install permanently:
+```bash
+sudo make install
+sudo depmod -a
 ```
+
+## Usage
+
+### Keyboard Backlight
+
+```bash
+# Brightness (0=off, 1=low, 2=high)
+echo 2 | sudo tee /sys/class/leds/casper::kbd_backlight/brightness
+
+# RGB color (format: ZZZZRRGGBB where Z=zone)
+echo 0600FF0000 | sudo tee /sys/class/leds/casper::kbd_backlight/led_control
+```
+
+Zones: 3, 4, 5 (keyboard zones), 6 (all), 7 (corner LEDs)
+
+### Fan Speeds
+
+```bash
+cat /sys/class/hwmon/hwmon*/fan1_input  # CPU
+cat /sys/class/hwmon/hwmon*/fan2_input  # GPU
+```
+
+### Power Profiles
+
+```bash
+cat /sys/firmware/acpi/platform_profile
+echo performance | sudo tee /sys/firmware/acpi/platform_profile
+```
+
+Available profiles: `performance`, `balanced_performance`, `quiet`, `low-power`
+
+## Technical Details
+
+**WMI GUID:** `644C5791-B7B0-4123-A90B-E93876E0DAAD`
+
+**Power Plan Mapping:**
+
+| Casper | platform_profile |
+|--------|------------------|
+| HIGH_POWER (1) | performance |
+| GAMING (2) | balanced_performance |
+| TEXT_MODE (3) | quiet |
+| LOW_POWER (4) | low-power |
+
+## License
+
+GPL v2
+
+## Maintainer
+
+Mustafa Ekşi <mustafa.eskieksi@gmail.com>
